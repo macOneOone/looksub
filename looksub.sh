@@ -5,16 +5,16 @@ crt_filename="$1-crt-tools-subdomains.json"
 cstr_filename="$1-cstr-tools-subdomains.json"
 
 sstools() {
-  curl -s "https://ssltools.digicert.com/chainTester/webservice/ctsearch/search?keyword=$1" -o "$sst_filename"
+  curl -Ss "https://ssltools.digicert.com/chainTester/webservice/ctsearch/search?keyword=$1" -o "$sst_filename"
 }
 
 crt_tools() {
-  curl -s "https://crt.sh/?q=yahoo&output=json" -o "$crt_filename"
+  curl -Ss "https://crt.sh/?q=yahoo&output=json" -o "$crt_filename"
 }
 
 
 certspotter() {
-  curl -s "https://api.certspotter.com/v1/issuances?domain=$1&include_subdomains=true&expand=dns_names&expand=issuer&expand=cert" -o "$cstr_filename"
+  curl -Ss "https://api.certspotter.com/v1/issuances?domain=$1&include_subdomains=true&expand=dns_names&expand=issuer&expand=cert" -o "$cstr_filename"
 }
 
 createDir() {
