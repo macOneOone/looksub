@@ -6,37 +6,47 @@ cstr_filename="$1-cstr-tools-subdomains.json"
 foldername=$(date | md5 | base64)
 
 sstools() {
+
   curl -Ss "https://ssltools.digicert.com/chainTester/webservice/ctsearch/search?keyword=$1" -o "$sst_filename"
 
   if [ $? -eq 0 ]; then
-    echo "$(tput setaf 7)$(tput setab 2)sst carregado com sucesso$(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 2) SST - carregado com sucesso$(tput sgr 0)"
   else
-    echo "$(tput setaf 7)$(tput setab 1)Processo executado com erro$(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 1) SST - Processo executado com erro$(tput sgr 0)"
   fi
+
 }
 
 crt_tools() {
+
   curl -Ss "https://crt.sh/?q=yahoo&output=json" -o "$crt_filename"
+
   if [ $? -eq 0 ] ; then
-    echo "$(tput setaf 7)$(tput setab 2)\tcrt carregado com sucesso \t $(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 2) CRT - carregado com sucesso$(tput sgr 0)"
   else
-    echo "$(tput setaf 7)$(tput setab 1)\tProcesso executado com erro \t $(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 1) CRT - Processo executado com erro$(tput sgr 0)"
   fi
- }
+
+}
 
 
 certspotter() {
+
   curl -Ss "https://api.certspotter.com/v1/issuances?domain=$1&include_subdomains=true&expand=dns_names&expand=issuer&expand=cert" -o "$cstr_filename"
+
   if [ $? -eq 0 ]; then
-   echo "$(tput setaf 7)$(tput setab 2)certspotter carregado com sucesso$(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 2) CERT SPOTTER - carregado com sucesso$(tput sgr 0)"
   else
-    echo "$(tput setaf 7)$(tput setab 1)Processo executado com erro$(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 1) CERT - Processo executado com erro$(tput sgr 0)"
   fi
-}
+
+ }
 
 MoveToDir() {
+
   mkdir $foldername
   mv *.json $foldername
+
 }
 
 jqRunner() {
@@ -60,10 +70,11 @@ search_subdomains() {
      echo "$(tput setaf 7)$(tput setab 3)Verificando as portas$(tput sgr 0)"
      sniffPorts
   esac
+
   if [ $? -eq 0 ]; then
-   echo "$(tput setaf 7)$(tput setab 2)Processo terminado com sucesso$(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 2)Processo terminado com sucesso$(tput sgr 0)"
   else
-    echo "$(tput setaf 7)$(tput setab 1)Processo terminado com falha $(tput sgr 0)"
+     echo "$(tput setaf 7)$(tput setab 1)Processo terminado com falha $(tput sgr 0)"
   fi
 }
 
