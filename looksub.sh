@@ -9,11 +9,10 @@ sstools() {
   curl -Ss "https://ssltools.digicert.com/chainTester/webservice/ctsearch/search?keyword=$1" -o "$sst_filename"
 
   if [ $? -eq 0 ]; then
-    echo "$(tput setaf 7)$(tput setab 2)\tsst carregado com sucesso \t $(tput sgr 0)"
+    echo "$(tput setaf 7)$(tput setab 2)sst carregado com sucesso$(tput sgr 0)"
   else
-    echo "$(tput setaf 7)$(tput setab 1)\tProcesso executado com erro \t $(tput sgr 0)"
+    echo "$(tput setaf 7)$(tput setab 1)Processo executado com erro$(tput sgr 0)"
   fi
-
 }
 
 crt_tools() {
@@ -23,7 +22,6 @@ crt_tools() {
   else
     echo "$(tput setaf 7)$(tput setab 1)\tProcesso executado com erro \t $(tput sgr 0)"
   fi
-
  }
 
 
@@ -62,11 +60,12 @@ search_subdomains() {
      echo "$(tput setaf 7)$(tput setab 3)Verificando as portas$(tput sgr 0)"
      sniffPorts
   esac
-     echo "$(tput setaf 7)$(tput setab 4)Processo concluido$(tput sgr 0)"
-
+  if [ $? -eq 0 ]; then
+   echo "$(tput setaf 7)$(tput setab 2)Processo terminado com sucesso$(tput sgr 0)"
+  else
+    echo "$(tput setaf 7)$(tput setab 1)Processo terminado com falha $(tput sgr 0)"
+  fi
 }
-
-
 
 #copied from https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
 
