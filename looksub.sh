@@ -18,7 +18,7 @@ certspotter() {
 }
 
 createDir() {
-  foldername=$(date | md5)
+ foldername=$(date | md5)
   mkdir $foldername
   mv *.json $foldername
 }
@@ -34,8 +34,9 @@ search_subdomains() {
   sstools "${1}"
   crt_tools "${1}"
   certspotter "${1}"
-  jqRunner # read the file and find the information that we want :D
+  #jqRunner # read the file and find the information that we want :D
   createDir
+
 
 }
 
