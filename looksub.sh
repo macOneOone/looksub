@@ -4,6 +4,7 @@ sst_filename="$1-sstools-subdomains.json"
 crt_filename="$1-crt-tools-subdomains.json"
 cstr_filename="$1-cstr-tools-subdomains.json"
 foldername=$(date | md5 | base64)
+totalError=0
 
 sstools() {
 
@@ -12,14 +13,14 @@ sstools() {
   if [ $? -eq 0 ]; then
      echo "$(tput setaf 7)$(tput setab 2) SUCESSO $(tput sgr 0) sst processados com sucesso"
   else
-     echo "$(tput setaf 7)$(tput setab 1) FALHA $(tput sgr 0) sst processado com falha"
+    echo "$(tput setaf 7)$(tput setab 1) FALHA $(tput sgr 0) sst processado com falha"
   fi
 
 }
 
 crt_tools() {
 
-  curl -Ss "https://crt.sh/?q=yahoo&output=json" -o "$crt_filename"
+  curl -Ss "https://crt.sh/?q=$1&output=json" -o "$crt_filename"
 
   if [ $? -eq 0 ]; then
      echo "$(tput setaf 7)$(tput setab 2) SUCESSO $(tput sgr 0) crt processados com sucesso"
@@ -36,7 +37,7 @@ certspotter() {
 
   if [ $? -eq 0 ]; then
      echo "$(tput setaf 7)$(tput setab 2) SUCESSO $(tput sgr 0) certfiles processados com sucesso"
-  else
+    else
      echo "$(tput setaf 7)$(tput setab 1) FALHA $(tput sgr 0) certfiles processado com falha"
   fi
 
@@ -44,8 +45,14 @@ certspotter() {
 
 MoveToDir() {
 
-  mkdir $foldername
-  mv *.json $foldername
+ls *.json* $foldername 2>/dev/null
+if [ $? -eq 0 ]; then
+    mkdir $foldername
+    mv *.json $foldername
+else
+    echo "$(tput setaf 7)$(tput setab 1) FALHA $(tput sgr 0) ficheiros nao existem"
+   exit 3
+fi
 
 }
 
@@ -55,8 +62,13 @@ jqRunner() {
 }
 
 sniffPorts (){
-  sh -c "./toSearch.sh $foldername/$cstr_filename"
-}
+  if [ -f $foldername/$cstr_filename ]; then
+     sh -c "./toSearch.sh $foldername/$cstr_filename"
+  else
+     echo "$(tput setaf 7)$(tput setab 1) FALHA $(tput sgr 0) nao foi possivel verificar as portas processado"
+     exit 3
+  fi
+ }
 
 checkDirs (){
   sh -c "./findPath.sh $1 $2 $3"
@@ -64,14 +76,22 @@ checkDirs (){
 
 search_subdomains() {
 
+  echo "$(tput setaf 7)$(tput setab 2) EM CURSO  $(tput sgr 0) Verificando os subdominios"
+
   sstools "${1}"
   crt_tools "${1}"
   certspotter "${1}"
+
   #jqRunner not important because i just want to see the result of the request
   # read the file and find the information that we want :D
+
+
+  echo "$(tput setaf 7)$(tput setab 2) SUCESSO $(tput sgr 0) Processo de verificacao dos subdominios concluido com sucesso"
+
+  MoveToDir
+
   case $2 in
     --ports)
-     MoveToDir
      echo "$(tput setaf 7)$(tput setab 3)EXECUTADO$(tput sgr 0) Verificando as portas"
      sniffPorts
      ;;
